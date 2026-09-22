@@ -81,34 +81,52 @@ def test_extract_observables():
 
 def test_extract_observables_preserves_compressed_ipv6() -> None:
     # Test extracting compressed/canonical "::" IPv6 addresses
+    text = """
+    1:2:3:4:5:6:7:8
+    1::
+    1:2:3:4:5:6:7::
+    1::8
+    1:2:3:4:5:6::8
+    1::7:8
+    1:2:3:4:5::7:8
+    1::6:7:8
+    1:2:3:4::6:7:8
+    1::5:6:7:8
+    1:2:3::5:6:7:8
+    1::4:5:6:7:8
+    1:2::4:5:6:7:8
+    1::3:4:5:6:7:8
+    1::8
+    ::2:3:4:5:6:7:8
+    ::8
+    ::
+    fe80::7:8
+    """
 
-    # Full address parses
-    address = "2001:0db8:85a3:0000:0000:8a2e:0370:7334"
-    assert extract_observables(address) == [Observable(value=address, type=ObservableType.IPV6)]
+    expected_set: set[Observable] = {
+        Observable(value="1:2:3:4:5:6:7:8", type=ObservableType.IPV6),
+        Observable(value="1::", type=ObservableType.IPV6),
+        Observable(value="1:2:3:4:5:6:7::", type=ObservableType.IPV6),
+        Observable(value="1::8", type=ObservableType.IPV6),
+        Observable(value="1:2:3:4:5:6::8", type=ObservableType.IPV6),
+        Observable(value="1::7:8", type=ObservableType.IPV6),
+        Observable(value="1:2:3:4:5::7:8", type=ObservableType.IPV6),
+        Observable(value="1::6:7:8", type=ObservableType.IPV6),
+        Observable(value="1:2:3:4::6:7:8", type=ObservableType.IPV6),
+        Observable(value="1::5:6:7:8", type=ObservableType.IPV6),
+        Observable(value="1:2:3::5:6:7:8", type=ObservableType.IPV6),
+        Observable(value="1::4:5:6:7:8", type=ObservableType.IPV6),
+        Observable(value="1:2::4:5:6:7:8", type=ObservableType.IPV6),
+        Observable(value="1::3:4:5:6:7:8", type=ObservableType.IPV6),
+        Observable(value="1::8", type=ObservableType.IPV6),
+        Observable(value="::2:3:4:5:6:7:8", type=ObservableType.IPV6),
+        Observable(value="::8", type=ObservableType.IPV6),
+        Observable(value="::", type=ObservableType.IPV6),
+        Observable(value="fe80::7:8", type=ObservableType.IPV6),
+    }
 
-    # Compressed representation parses
-    address = "2001:db8:85a3::8a2e:370:7334"  # 2001:0db8:85a3:0000:0000:8a2e:0370:7334
-    assert extract_observables(address) == [Observable(value=address, type=ObservableType.IPV6)]
-
-    # Leading zeros parses
-    address = "::db8:85a3:8a2e:370:7334"  # 0000:0000:0000:0db8:85a3:8a2e:0370:7334
-    assert extract_observables(address) == [Observable(value=address, type=ObservableType.IPV6)]
-
-    # Trailing zeros parses
-    address = "2001:db8:85a3::"  # 2001:0db8:85a3:0000:0000:0000:0000:0000
-    assert extract_observables(address) == [Observable(value=address, type=ObservableType.IPV6)]
-
-    # Last block non-zero parses
-    address = "2001:db8:85a3::7334"  # 2001:0db8:85a3:0000:0000:0000:0000:7334
-    assert extract_observables(address) == [Observable(value=address, type=ObservableType.IPV6)]
-
-    # Last block zero parses
-    address = "2001:db8:85a3::7334:0"  # 2001:0db8:85a3:0000:0000:0000:7334:0000
-    assert extract_observables(address) == [Observable(value=address, type=ObservableType.IPV6)]
-
-    # Link-local unicast address parses
-    address = "fe80::7:8"  # fe80:0000:0000:0000:0000:0000:0007:0008
-    assert extract_observables(address) == [Observable(value=address, type=ObservableType.IPV6)]
+    results_set: set[Observable] = set(extract_observables(text))
+    assert results_set == expected_set
 
     # Confirm invalid address doesn't parse
     invalid_address = "2001:0db8:85a3:0000:0000:8a2e:0370:7334:1234"
