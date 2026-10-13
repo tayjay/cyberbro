@@ -119,6 +119,7 @@ DFIR_IRIS_URL=https://dfir-iris.local
 DFIR_IRIS_SEARCH_NOTES=false
 GOOGLE_CSE_CX=cx_here
 GOOGLE_CSE_KEY=key_here
+GOOGLE_CSE_URL=https://www.googleapis.com/customsearch/v1
 GOOGLE_SAFE_BROWSING=token_here
 HISTER_TOKEN=token_here
 HISTER_BASE_URL=https://hister.example.com
@@ -316,6 +317,7 @@ curl "http://localhost:5000/api/results/e88de647-b153-4904-91e5-8f5c79174854"
 * [IPquery](https://ipquery.gitbook.io/ipquery-docs)
 * [Ioc.One](https://ioc.one/)
 * [Microsoft Defender for Endpoint](https://docs.microsoft.com/en-us/windows/security/threat-protection/microsoft-defender-atp/microsoft-defender-for-endpoint-api)
+* [Microsoft Entra ID (OpenID Configuration)](https://login.microsoftonline.com/)
 * [MISP](https://www.misp-project.org/)
 * [MISP Feedback](https://github.com/MISP/misp-feedback/)
 * [OpenCTI](https://www.opencti.io/)
@@ -348,6 +350,7 @@ A huge thank you to all the amazing contributors who made pull requests and help
 * [0xffr](https://github.com/0xffr) for fixing issue #98 - Grep.app engine broken and commenting properly in CriminalIP engine.
 * [Maxime Berthault - Maxou56800](https://github.com/Maxou56800) for developing Cyberbro CLI.
 * [Jonas Lejon](https://github.com/jonaslejon) for adding ScanMalware engine.
+* [egeoguz04](https://github.com/egeoguz04) for allowing the config of the Google CSE endpoint. This will be useful for the upcoming Google changes.
 
 Your contributions are greatly appreciated!
 
